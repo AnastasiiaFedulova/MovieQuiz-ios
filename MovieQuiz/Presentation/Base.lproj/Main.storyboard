@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -107,12 +107,12 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="NoButton" destination="W9H-VS-BKD" id="2Zb-y6-IHf"/>
-                        <outlet property="YesButton" destination="QxC-64-fTg" id="oOx-bD-NO2"/>
                         <outlet property="counterLabel" destination="JOG-u6-Chl" id="rG4-AS-UTY"/>
                         <outlet property="imageView" destination="ujK-Uy-cYf" id="cDm-l1-7fz"/>
+                        <outlet property="noButton" destination="W9H-VS-BKD" id="ffg-MR-FBk"/>
                         <outlet property="questionLabel" destination="7WC-nC-lZN" id="E0i-Wu-VnD"/>
                         <outlet property="textLabel" destination="jJ4-NU-7Wi" id="LOv-GZ-Rg3"/>
+                        <outlet property="yesButton" destination="QxC-64-fTg" id="zRf-jg-ohV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

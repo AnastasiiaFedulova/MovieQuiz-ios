@@ -62,16 +62,17 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var questionLabel: UILabel!
-    @IBOutlet private var noButton: UILabel!
-    @IBOutlet private var yesButton: UILabel!
+    @IBOutlet private var yesButton: UIButton!
+    @IBOutlet private var noButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        noButton.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        yesButton.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        imageView.layer.cornerRadius = 20
         
         show(quiz: convert(model: questions[currentQuestionIndex]))
     }
@@ -84,15 +85,19 @@ final class MovieQuizViewController: UIViewController {
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
+        
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
     }
     private func showAnswerResult(isCorrect: Bool) {
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
         if isCorrect {
             correctAnswers += 1
         }
         
         imageView.layer.masksToBounds = true // даём разрешение на рисование рамки
         imageView.layer.borderWidth = 8 // толщина рамки
-        imageView.layer.cornerRadius = 15
         
         if isCorrect == true {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
@@ -153,8 +158,27 @@ final class MovieQuizViewController: UIViewController {
     }
 }
 
-struct QuizQuestion {
+private struct QuizQuestion {
     let image: String
     let text: String
+    let correctAnswer: Bool
+}
+
+// для состояния "Вопрос показан"
+private struct QuizStepViewModel {
+  let image: UIImage
+  let question: String
+  let questionNumber: String
+}
+
+// для состояния "Результат квиза"
+private struct QuizResultsViewModel {
+  let title: String
+  let text: String
+  let buttonText: String
+}
+
+// для состояния "Резултат ответа"
+private struct QuizResultAnswerModel {
     let correctAnswer: Bool
 }
