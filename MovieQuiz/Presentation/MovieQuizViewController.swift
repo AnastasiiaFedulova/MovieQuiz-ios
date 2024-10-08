@@ -1,11 +1,11 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     private let questionsAmount: Int = 10
-    private var questionFactory: QuestionFactory = QuestionFactory()
+    private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     
     @IBOutlet private var imageView: UIImageView!
@@ -23,10 +23,27 @@ final class MovieQuizViewController: UIViewController {
         noButton.font = UIFont(name: "YSDisplay-Medium", size: 20)
         yesButton.font = UIFont(name: "YSDisplay-Medium", size: 20)
         
-        if let firstQuestion = questionFactory.requestNextQuestion() {
-            currentQuestion = firstQuestion
-            let viewModel = convert(model: firstQuestion)
-            show(quiz: viewModel)
+        let questionFactory = QuestionFactory() // 2
+        questionFactory.setup(delegate: self)
+        self.questionFactory = questionFactory    // 4
+
+        
+        questionFactory.requestNextQuestion() 
+        }
+    
+    
+    // MARK: - QuestionFactoryDelegate
+
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else {
+            return
+        }
+
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
         }
     }
     
@@ -60,7 +77,8 @@ final class MovieQuizViewController: UIViewController {
             imageView.layer.borderColor = UIColor.ypRed.cgColor
         }
        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else { return }
             self.showNextQuestionOrResults()
             imageView.layer.borderColor = UIColor.ypBlack.cgColor
         }
@@ -76,12 +94,8 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel) // 3
         } else {
             currentQuestionIndex += 1
-            if let nextQuestion = questionFactory.requestNextQuestion() {
-                currentQuestion = nextQuestion
-                let viewModel = convert(model: nextQuestion)
-
-                show(quiz: viewModel)
-            }
+            
+            questionFactory!.requestNextQuestion()
         }
     }
     
@@ -90,17 +104,15 @@ final class MovieQuizViewController: UIViewController {
                                       message: "Ваш результат: \(correctAnswers)/\(questionsAmount)",
                                       preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "Сыграть еще раз", style: .default) { [self] _ in
+        let action = UIAlertAction(title: "Сыграть еще раз", style: .default) { [weak self] _ in
+            guard let self = self else { return }
             
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
-            if let firstQuestion = self.questionFactory.requestNextQuestion() {
-                self.currentQuestion = firstQuestion
-                let viewModel = self.convert(model: firstQuestion)
-                
-                self.show(quiz: viewModel)
+            
+            self.questionFactory!.requestNextQuestion()
             }
-        }
+        
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
     }
@@ -123,8 +135,6 @@ final class MovieQuizViewController: UIViewController {
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
 }
-
-
 struct QuizQuestion {
     let image: String
     let text: String
