@@ -96,21 +96,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func show(quiz result: QuizResultsViewModel) {
-        let alert = UIAlertController(title: "Этот раунд окончен!",
-                                      message: "Ваш результат: \(correctAnswers)/\(questionsAmount)",
-                                      preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "Сыграть еще раз", style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            
-            self.currentQuestionIndex = 0
+        let alertData = AlertModel(title: "Этот раунд окончен!", message: "Ваш результат: \(correctAnswers)/\(questionsAmount)", buttonText: "Сыграть еще раз", completion: { self.currentQuestionIndex = 0
             self.correctAnswers = 0
-            
-            self.questionFactory!.requestNextQuestion()
-            }
+            self.questionFactory!.requestNextQuestion()})
         
-        alert.addAction(action)
-        self.present(alert, animated: true, completion: nil)
+        let alertPresenter = AlertPresenter()
+        alertPresenter.setup(delegate: self)
+        alertPresenter.alert(alertData: alertData)
+        
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
@@ -137,3 +130,4 @@ struct QuizQuestion {
     let correctAnswer: Bool
 }
 
+ 
