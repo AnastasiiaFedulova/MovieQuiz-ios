@@ -21,8 +21,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        noButton.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        yesButton.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         
         statisticServis = StatisticService()
         
@@ -91,6 +91,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showNextQuestionOrResults() {
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
+        
         if currentQuestionIndex == questionsAmount - 1 {
             if let statisticServis = statisticServis {
                 let gameResult = GameResult(correct: correctAnswers, total: questionsAmount, date: Date())
