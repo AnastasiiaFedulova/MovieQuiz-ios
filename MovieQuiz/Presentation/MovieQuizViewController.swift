@@ -7,7 +7,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
-    private var statisticServis: StatisticServiceProtocol?
+    private var statisticServise: StatisticServiceProtocol?
     
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
@@ -23,8 +23,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        imageView.layer.cornerRadius = 20
         
-        statisticServis = StatisticService()
+        statisticServise = StatisticService()
         
         
         let questionFactory = QuestionFactory() // 2
@@ -64,6 +65,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
         
+        
         yesButton.isEnabled = true
         noButton.isEnabled = true
     }
@@ -76,6 +78,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         imageView.layer.masksToBounds = true // даём разрешение на рисование рамки
         imageView.layer.borderWidth = 8 // толщина рамки
+    
         
         if isCorrect == true {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
@@ -95,14 +98,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         noButton.isEnabled = true
         
         if currentQuestionIndex == questionsAmount - 1 {
-            if let statisticServis = statisticServis {
+            if let statisticServise = statisticServise {
                 let gameResult = GameResult(correct: correctAnswers, total: questionsAmount, date: Date())
-                statisticServis.store(result: gameResult)
+                statisticServise.store(result: gameResult)
                 
                 let dateFormater = DateFormatter()
                 dateFormater.dateFormat = "dd.MM.yy HH:mm"
                 
-                let text = "Ваш результат: \(correctAnswers)/10 \n Количество сыгранных квизов: \(statisticServis.gamesCount) \n Рекорд: \(statisticServis.bestGame.correct )\\\(statisticServis.bestGame.total) (\(dateFormater.string(from: statisticServis.bestGame.date))) \n Средняя точность: \(String(format: "%.2f", statisticServis.totalAccuracy)) %"// 1
+                let text = "Ваш результат: \(correctAnswers)/10 \n Количество сыгранных квизов: \(statisticServise.gamesCount) \n Рекорд: \(statisticServise.bestGame.correct )/\(statisticServise.bestGame.total) (\(dateFormater.string(from: statisticServise.bestGame.date))) \n Средняя точность: \(String(format: "%.2f", statisticServise.totalAccuracy)) %"// 1
                 let viewModel = QuizResultsViewModel( // 2
                     title: "Этот раунд окончен!",
                     text: text,

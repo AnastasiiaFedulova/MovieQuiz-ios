@@ -14,7 +14,10 @@ final class StatisticService {
         case correct
         case bestGame
         case gameCount
-        
+        case total
+        case date
+        case correctAnswers
+        case countAnswers
     }
 }
 
@@ -23,18 +26,18 @@ extension StatisticService: StatisticServiceProtocol {
     
     private var correctAnswers: Int {
         get {
-            storage.integer(forKey: "correctAnswers")
+            storage.integer(forKey: Keys.correctAnswers.rawValue)
         }
         set {
-            storage.set(newValue, forKey: "correctAnswers")
+            storage.set(newValue, forKey: Keys.correctAnswers.rawValue)
         }
     }
     private var countAnswers: Int {
         get {
-            storage.integer(forKey: "countAnswers")
+            storage.integer(forKey: Keys.countAnswers.rawValue)
         }
         set {
-            storage.set(newValue, forKey: "countAnswers")
+            storage.set(newValue, forKey: Keys.countAnswers.rawValue)
         }
     }
     
@@ -49,12 +52,16 @@ extension StatisticService: StatisticServiceProtocol {
     
     var bestGame: GameResult {
         get {
-            GameResult(correct: storage.integer(forKey: Keys.correct.rawValue), total:   storage.integer(forKey: "total"), date: storage.object(forKey: "date") as? Date ?? Date())
+            GameResult(
+                correct: storage.integer(forKey: Keys.correct.rawValue),
+                total:   storage.integer(forKey: Keys.total.rawValue),
+                date: storage.object(forKey: Keys.date.rawValue) as? Date ?? Date()
+            )
         }
         set {
             storage.set(newValue.correct, forKey: Keys.correct.rawValue)
-            storage.set(newValue.total, forKey: "total")
-            storage.set(newValue.date, forKey: "date")
+            storage.set(newValue.total, forKey: Keys.total.rawValue)
+            storage.set(newValue.date, forKey: Keys.date.rawValue)
         }
     }
     
