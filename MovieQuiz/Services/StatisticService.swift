@@ -14,6 +14,7 @@ final class StatisticService {
         case correct
         case bestGame
         case gameCount
+        
     }
 }
 
@@ -26,6 +27,14 @@ extension StatisticService: StatisticServiceProtocol {
         }
         set {
             storage.set(newValue, forKey: "correctAnswers")
+        }
+    }
+    private var countAnswers: Int {
+        get {
+            storage.integer(forKey: "countAnswers")
+        }
+        set {
+            storage.set(newValue, forKey: "countAnswers")
         }
     }
     
@@ -50,15 +59,21 @@ extension StatisticService: StatisticServiceProtocol {
     }
     
     var totalAccuracy: Double {
-        if storage.integer(forKey: Keys.gameCount.rawValue) != 0 {
-           return Double(storage.integer(forKey: "correctAnswers") / (storage.integer(forKey: Keys.gameCount.rawValue) * 10)) * 100
+        if gamesCount != 0 {
+           return Double(Double(correctAnswers) / Double(gamesCount * 10)) * 100
         } else {
             return 100.00
         }
     }
     
-    func store(correct count: Int, total amount: Int) {
-        return
+    func store(result: GameResult) {
+        gamesCount = gamesCount + 1
+        correctAnswers += result.correct
+        countAnswers += result.total
+        
+        if result.isBetterThan(bestGame) {
+            bestGame = result
+        }
     }
     
   

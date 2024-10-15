@@ -12,6 +12,6 @@ protocol StatisticServiceProtocol {
     var bestGame: GameResult { get }
     var totalAccuracy: Double { get }
     
-    func store(correct count: Int, total amount: Int)
+    func store(result: GameResult)
 }
 
