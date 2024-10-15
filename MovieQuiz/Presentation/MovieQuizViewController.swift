@@ -13,16 +13,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var questionLabel: UILabel!
-    @IBOutlet private var noButton: UILabel!
-    @IBOutlet private var yesButton: UILabel!
+    @IBOutlet private var noButton: UIButton!
+    @IBOutlet private var yesButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        noButton.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        yesButton.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        noButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         
         statisticServis = StatisticService()
         
@@ -72,6 +72,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.masksToBounds = true // даём разрешение на рисование рамки
         imageView.layer.borderWidth = 8 // толщина рамки
         imageView.layer.cornerRadius = 15
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
         
         if isCorrect == true {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
@@ -87,6 +89,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showNextQuestionOrResults() {
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
+        
         if currentQuestionIndex == questionsAmount - 1 {
             if let statisticServis = statisticServis {
                 let gameResult = GameResult(correct: correctAnswers, total: questionsAmount, date: Date())
