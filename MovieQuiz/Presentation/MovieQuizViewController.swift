@@ -146,10 +146,5 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
 }
-struct QuizQuestion {
-    let image: String
-    let text: String
-    let correctAnswer: Bool
-}
 
  

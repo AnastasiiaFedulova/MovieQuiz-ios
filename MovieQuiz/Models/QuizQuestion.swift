@@ -7,6 +7,8 @@
 
 import Foundation
 // для состояния "Резултат ответа"
-struct QuizResultAnswerModel {
+struct QuizQuestion {
+    let image: String
+    let text: String
     let correctAnswer: Bool
 }
