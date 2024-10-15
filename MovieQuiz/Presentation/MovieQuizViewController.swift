@@ -27,6 +27,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         statisticServis = StatisticService()
         
         
+        statisticServis = StatisticService()
+        
+        
         let questionFactory = QuestionFactory() // 2
         questionFactory.setup(delegate: self)
         self.questionFactory = questionFactory    // 4
