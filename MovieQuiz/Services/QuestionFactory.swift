@@ -11,10 +11,14 @@ final class QuestionFactory: QuestionFactoryProtocol {
     private let moviesLoader: MoviesLoading
     private var delegate: QuestionFactoryDelegate?   // почему weak не подходит
     private var movies: [MostPopularMovie] = []
+    private var alertPresenter: AlertPresenter
     
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
         self.moviesLoader = moviesLoader
         self.delegate = delegate
+        self.alertPresenter = AlertPresenter()
+        
+        self.alertPresenter.setup(delegate: self.delegate as! MovieQuizViewController)
     }
     func loadData() {
         moviesLoader.loadMovies { [weak self] result in
@@ -96,7 +100,15 @@ final class QuestionFactory: QuestionFactoryProtocol {
            do {
                 imageData = try Data(contentsOf: movie.resizedImageURL)
             } catch {
-                print("Failed to load image")
+                let imageError = AlertModel(title: "Ошибка", message: "Произошла ошибка загрузки изображения", buttonText: "Попробовать еще раз", completion: { [weak self] in
+                    self?.loadData()
+                })
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    alertPresenter.alert(alertData: imageError)
+                }
+                
+                return
             }
             
             let rating = Float(movie.rating) ?? 0

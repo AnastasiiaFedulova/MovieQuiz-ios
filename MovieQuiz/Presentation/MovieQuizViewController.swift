@@ -8,6 +8,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var statisticServise: StatisticServiceProtocol?
+    private var errorAlertPresenter: AlertPresenter?
     
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
@@ -26,6 +27,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         yesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         imageView.layer.cornerRadius = 20
         
+        let errorAlertPresenter = AlertPresenter()
+        errorAlertPresenter.setup(delegate: self)
+        self.errorAlertPresenter = errorAlertPresenter
+        
         statisticServise = StatisticService()
         
         
@@ -33,7 +38,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.questionFactory = questionFactory
         showLoadingIndicator()
         questionFactory.loadData()
-        }
+    }
     
     
     // MARK: - QuestionFactoryDelegate
@@ -62,7 +67,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
         
-        
+        hideLoadingIndicator()
         yesButton.isEnabled = true
         noButton.isEnabled = true
     }
@@ -92,7 +97,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showNextQuestionOrResults() {
-
+    
         
         if currentQuestionIndex == questionsAmount - 1 {
             if let statisticServise = statisticServise {
@@ -112,7 +117,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             
         } else {
             currentQuestionIndex += 1
-            
             questionFactory!.requestNextQuestion()
         }
     }
@@ -122,14 +126,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.correctAnswers = 0
             self.questionFactory!.requestNextQuestion()})
         
-        let alertPresenter = AlertPresenter()
-        alertPresenter.setup(delegate: self)
-        alertPresenter.alert(alertData: alertData)
+
+        errorAlertPresenter?.alert(alertData: alertData)
         
     }
     
     func didLoadDataFromServer() {
-        activityIndicator.isHidden = true // скрываем индикатор загрузки
+        hideLoadingIndicator() // скрываем индикатор загрузки
         questionFactory?.requestNextQuestion()
     }
 
@@ -148,16 +151,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showNetworkError(message: String) {
         hideLoadingIndicator() // скрываем индикатор загрузки
         
-        let errorAlert = AlertModel(title: "Ошибка", message: "", buttonText: "Попробовать еще раз", completion: {
-            self.currentQuestionIndex = 0
-            self.correctAnswers = 0
+        let errorAlert = AlertModel(title: "Ошибка", message: "", buttonText: "Попробовать еще раз", completion: { [weak self] in
+            self?.currentQuestionIndex = 0
+            self?.correctAnswers = 0
             
-            self.questionFactory!.requestNextQuestion()
+            self?.questionFactory!.loadData()
+            self?.showLoadingIndicator()
         })
         
-        let errorAlertPresenter = AlertPresenter()
-        errorAlertPresenter.setup(delegate: self)
-        errorAlertPresenter.alert(alertData: errorAlert)
+        errorAlertPresenter?.alert(alertData: errorAlert)
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
@@ -165,6 +167,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             return
         }
         let givenAnswer = true
+        showLoadingIndicator()
         
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
@@ -174,6 +177,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             return
         }
         let givenAnswer = false
+        showLoadingIndicator()
         
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
