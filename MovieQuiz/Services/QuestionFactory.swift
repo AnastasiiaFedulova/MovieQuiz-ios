@@ -13,12 +13,16 @@ final class QuestionFactory: QuestionFactoryProtocol {
     private var movies: [MostPopularMovie] = []
     private var alertPresenter: AlertPresenter
     
-    init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
+    init(
+        moviesLoader: MoviesLoading,
+        delegate: QuestionFactoryDelegate?,
+        controller: MovieQuizViewControllerProtocol
+    ) {
         self.moviesLoader = moviesLoader
         self.delegate = delegate
         self.alertPresenter = AlertPresenter()
         
-        self.alertPresenter.setup(delegate: self.delegate as! MovieQuizViewController)
+        self.alertPresenter.setup(delegate: controller)
     }
     func loadData() {
         moviesLoader.loadMovies { [weak self] result in
