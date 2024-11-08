@@ -67,7 +67,7 @@ extension StatisticService: StatisticServiceProtocol {
     
     var totalAccuracy: Double {
         if gamesCount != 0 {
-           return Double(Double(correctAnswers) / Double(gamesCount * 10)) * 100
+            return Double(Double(correctAnswers) / Double(gamesCount * 10)) * 100
         } else {
             return 100.00
         }
@@ -83,5 +83,5 @@ extension StatisticService: StatisticServiceProtocol {
         }
     }
     
-  
+    
 }
