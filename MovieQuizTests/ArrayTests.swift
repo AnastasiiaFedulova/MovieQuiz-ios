@@ -7,6 +7,7 @@
 
 import Foundation
 import XCTest
+@testable import MovieQuiz
 
 class ArrayTests: XCTestCase {
     
@@ -14,7 +15,7 @@ class ArrayTests: XCTestCase {
         
         let array = [1, 1, 2, 3, 5]
         
-        let value = array[2]
+        let value = array[safe: 2]
         
         XCTAssertNotNil(value)
         XCTAssertEqual(value, 2)
@@ -24,7 +25,7 @@ class ArrayTests: XCTestCase {
         
         let array = [1, 1, 2, 3, 5]
         
-        let value = array[20]
+        let value = array[safe: 20]
         
         XCTAssertNil(value)
     }

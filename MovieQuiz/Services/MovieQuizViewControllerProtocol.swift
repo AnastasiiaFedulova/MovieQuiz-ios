@@ -17,7 +17,7 @@ protocol MovieQuizViewControllerProtocol: AnyObject {
     
     func showNetworkError(message: String)
     func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)?)
-    func showAnswerResult(isCorrect: Bool) 
+    func showAnswerResult(isCorrect: Bool)
 }
 
 

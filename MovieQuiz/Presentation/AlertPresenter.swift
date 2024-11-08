@@ -16,12 +16,12 @@ class AlertPresenter {
                                       preferredStyle: .alert)
         
         let action = UIAlertAction(title: alertData.buttonText, style: .default) { _ in alertData.completion()
-            }
+        }
         
         alert.addAction(action)
         delegate?.present(alert, animated: true, completion: nil)
     }
-     func setup(delegate: MovieQuizViewControllerProtocol) {
+    func setup(delegate: MovieQuizViewControllerProtocol) {
         self.delegate = delegate
     }
 }

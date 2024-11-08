@@ -23,7 +23,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         imageView.layer.cornerRadius = 20
         
         presenter = MovieQuizPresenter(viewController: self)
-      //  presenter.viewController = self
+        //  presenter.viewController = self
         
         let errorAlertPresenter = AlertPresenter()
         errorAlertPresenter.setup(delegate: self)
@@ -45,14 +45,14 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         noButton.isEnabled = true
     }
     
-     func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
         
         if isCorrect {
             presenter.correctAnswersPlusOne()
         }
         
-        imageView.layer.masksToBounds = true // даём разрешение на рисование рамки
-        imageView.layer.borderWidth = 8 // толщина рамки
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
         
         
         if isCorrect == true {
@@ -70,43 +70,42 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         noButton.isEnabled = false
     }
     
-     func show(quiz result: QuizResultsViewModel) {
+    func show(quiz result: QuizResultsViewModel) {
         
-         let alertData = AlertModel(title: result.title, message: result.text, buttonText: result.buttonText, completion: {
-             self.presenter.restartGame()
-          
-         })
-    
+        let alertData = AlertModel(title: result.title, message: result.text, buttonText: result.buttonText, completion: {
+            self.presenter.restartGame()
+            
+        })
+        
         errorAlertPresenter?.alert(alertData: alertData)
-        
     }
-        
-         func showLoadingIndicator() {
-            activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
-            activityIndicator.startAnimating() // включаем анимацию
-        }
-        func hideLoadingIndicator() {
-            activityIndicator.isHidden = true
-        }
-        
-        func showNetworkError(message: String) {
-            hideLoadingIndicator() // скрываем индикатор загрузки
-            
-            let errorAlert = AlertModel(title: "Ошибка", message: "", buttonText: "Попробовать еще раз", completion: { [weak self] in
-                self?.presenter.restartGame()
-
-                self?.showLoadingIndicator()
-            })
-            
-            errorAlertPresenter?.alert(alertData: errorAlert)
-        }
-        
-        @IBAction private func yesButtonClicked(_ sender: UIButton) {
-            presenter.yesButtonClicked()
-        }
-        
-        @IBAction private func noButtonClicked(_ sender: UIButton) {
-                    presenter.noButtonClicked()
-        }
+    
+    func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
     }
+    func hideLoadingIndicator() {
+        activityIndicator.isHidden = true
+    }
+    
+    func showNetworkError(message: String) {
+        hideLoadingIndicator() 
+        
+        let errorAlert = AlertModel(title: "Ошибка", message: "", buttonText: "Попробовать еще раз", completion: { [weak self] in
+            self?.presenter.restartGame()
+            
+            self?.showLoadingIndicator()
+        })
+        
+        errorAlertPresenter?.alert(alertData: errorAlert)
+    }
+    
+    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        presenter.yesButtonClicked()
+    }
+    
+    @IBAction private func noButtonClicked(_ sender: UIButton) {
+        presenter.noButtonClicked()
+    }
+}
 

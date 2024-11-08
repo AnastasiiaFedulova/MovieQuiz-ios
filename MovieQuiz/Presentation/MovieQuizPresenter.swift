@@ -30,16 +30,16 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func didLoadDataFromServer() {
-            viewController?.hideLoadingIndicator()
-            questionFactory?.requestNextQuestion()
-        }
+        viewController?.hideLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
     
     func didFailToLoadData(with error: Error) {
-           let message = error.localizedDescription
-           viewController?.showNetworkError(message: message)
-       }
+        let message = error.localizedDescription
+        viewController?.showNetworkError(message: message)
+    }
     
-    func isLastQuestion() -> Bool {
+    private func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
     }
     
@@ -65,38 +65,38 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
     }
-   func yesButtonClicked() {
+    func yesButtonClicked() {
         didAnswer(isYes: true)
     }
-   func noButtonClicked() {
+    func noButtonClicked() {
         didAnswer(isYes: false)
     }
     private func didAnswer(isYes: Bool) {
-           guard let currentQuestion = currentQuestion else {
-               return
-           }
-           
-           let givenAnswer = isYes
-           
-           viewController?.showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-       }
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-            guard let question = question else {
-                return
-            }
-            
-            currentQuestion = question
-            let viewModel = convert(model: question)
-            DispatchQueue.main.async { [weak self] in
-                self?.viewController?.show(quiz: viewModel)
-            }
+        guard let currentQuestion = currentQuestion else {
+            return
         }
+        
+        let givenAnswer = isYes
+        
+        viewController?.showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else {
+            return
+        }
+        
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        DispatchQueue.main.async { [weak self] in
+            self?.viewController?.show(quiz: viewModel)
+        }
+    }
     
     func restartGame() {
-            currentQuestionIndex = 0
-            correctAnswers = 0
-            questionFactory?.requestNextQuestion()
-        }
+        currentQuestionIndex = 0
+        correctAnswers = 0
+        questionFactory?.requestNextQuestion()
+    }
     
     func showNextQuestionOrResults() {
         
@@ -108,7 +108,13 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                 let dateFormater = DateFormatter()
                 dateFormater.dateFormat = "dd.MM.yy HH:mm"
                 
-                let text = "Ваш результат: \(correctAnswers)/10 \n Количество сыгранных квизов: \(statisticServise.gamesCount) \n Рекорд: \(statisticServise.bestGame.correct )/\(statisticServise.bestGame.total) (\(dateFormater.string(from: statisticServise.bestGame.date))) \n Средняя точность: \(String(format: "%.2f", statisticServise.totalAccuracy)) %"
+                let text = """
+                Ваш результат: \(correctAnswers)/10 \
+                Количество сыгранных квизов: \(statisticServise.gamesCount) \
+                Рекорд: \(statisticServise.bestGame.correct )/\(statisticServise.bestGame.total) (\(dateFormater.string(from: statisticServise.bestGame.date))) \
+                Средняя точность: \(String(format: "%.2f", statisticServise.totalAccuracy)) %
+                """
+                
                 let viewModel = QuizResultsViewModel(
                     title: "Этот раунд окончен!",
                     text: text,
@@ -121,5 +127,4 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             questionFactory!.requestNextQuestion()
         }
     }
-    
 }
